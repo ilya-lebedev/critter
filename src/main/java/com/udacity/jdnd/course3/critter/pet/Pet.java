@@ -1,5 +1,6 @@
 package com.udacity.jdnd.course3.critter.pet;
 
+import com.udacity.jdnd.course3.critter.user.Customer;
 import org.hibernate.annotations.Nationalized;
 
 import javax.persistence.*;
@@ -16,6 +17,9 @@ public class Pet {
 
     @Nationalized
     private String name;
+
+    @ManyToOne
+    private Customer customer;
 
     private LocalDate birthDate;
 
@@ -44,6 +48,14 @@ public class Pet {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public LocalDate getBirthDate() {
