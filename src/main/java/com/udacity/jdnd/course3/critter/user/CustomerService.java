@@ -29,6 +29,10 @@ public class CustomerService {
         return customerRepository.findById(id).get();
     }
 
+    public Customer getCustomerByPetId(long petId) {
+        return customerRepository.findCustomerByPetsId(petId);
+    }
+
     public void addPetToCustomer(Customer customer, Pet pet) {
         List<Pet> pets = customer.getPets();
 
