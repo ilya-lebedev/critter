@@ -1,26 +1,27 @@
 package com.udacity.jdnd.course3.critter.pet;
 
-import com.udacity.jdnd.course3.critter.user.Customer;
-import com.udacity.jdnd.course3.critter.user.CustomerRepository;
+import com.udacity.jdnd.course3.critter.user.CustomerService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class PetService {
 
     private PetRepository petRepository;
-    private CustomerRepository customerRepository;
+    private CustomerService customerService;
 
-    public PetService(PetRepository petRepository, CustomerRepository customerRepository) {
+    public PetService(PetRepository petRepository, CustomerService customerService) {
         this.petRepository = petRepository;
-        this.customerRepository = customerRepository;
+        this.customerService = customerService;
     }
 
-    public Pet save(Pet pet, long ownerId) {
-        Customer customer = customerRepository.findById(ownerId).get();
-        pet.setCustomer(customer);
-        return petRepository.save(pet);
+    public Pet save(Pet pet) {
+        Pet savedPet = petRepository.save(pet);
+        customerService.addPetToCustomer(savedPet.getCustomer(), savedPet);
+        return savedPet;
     }
 
     public List<Pet> getAllPets() {
