@@ -1,5 +1,7 @@
 package com.udacity.jdnd.course3.critter.pet;
 
+import com.udacity.jdnd.course3.critter.user.Customer;
+import com.udacity.jdnd.course3.critter.user.CustomerService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,15 +16,19 @@ import java.util.stream.Collectors;
 public class PetController {
 
     private PetService petService;
+    private CustomerService customerService;
 
-    public PetController(PetService petService) {
+    public PetController(PetService petService, CustomerService customerService) {
         this.petService = petService;
+        this.customerService = customerService;
     }
 
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
         Pet pet = convertPetDTOToPet(petDTO);
-        Pet savedPet = petService.save(pet, petDTO.getOwnerId());
+        Customer customer = customerService.getCustomerById(petDTO.getOwnerId());
+        pet.setCustomer(customer);
+        Pet savedPet = petService.save(pet);
         return convertPetToPetDTO(savedPet);
     }
 
