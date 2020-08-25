@@ -1,11 +1,13 @@
 package com.udacity.jdnd.course3.critter.user;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.util.Set;
 
 @Service
+@Transactional
 public class EmployeeService {
 
     private EmployeeRepository employeeRepository;
