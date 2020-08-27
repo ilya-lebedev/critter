@@ -43,7 +43,8 @@ public class ScheduleController {
 
     @GetMapping("/pet/{petId}")
     public List<ScheduleDTO> getScheduleForPet(@PathVariable long petId) {
-        throw new UnsupportedOperationException();
+        List<Schedule> schedules = petService.getPetById(petId).getSchedules();
+        return convertScheduleListToScheduleDTOList(schedules);
     }
 
     @GetMapping("/employee/{employeeId}")
