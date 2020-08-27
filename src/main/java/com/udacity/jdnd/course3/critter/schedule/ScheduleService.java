@@ -5,10 +5,12 @@ import com.udacity.jdnd.course3.critter.pet.PetService;
 import com.udacity.jdnd.course3.critter.user.Employee;
 import com.udacity.jdnd.course3.critter.user.EmployeeService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class ScheduleService {
 
     private ScheduleRepository scheduleRepository;
