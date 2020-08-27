@@ -1,10 +1,12 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import com.udacity.jdnd.course3.critter.schedule.Schedule;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,6 +29,10 @@ public class EmployeeService {
         return employeeRepository.findById(id).get();
     }
 
+    public List<Employee> getEmployeesByIds(List<Long> employeeIds) {
+        return employeeRepository.findAllById(employeeIds);
+    }
+
     public void setAvailability(Set<DayOfWeek> daysAvailable, long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).get();
         employee.setDaysAvailable(daysAvailable);
@@ -39,6 +45,18 @@ public class EmployeeService {
         return employees.stream()
                 .filter(employee -> employee.getSkills().containsAll(skills))
                 .collect(Collectors.toList());
+    }
+
+    public void addScheduleToEmployee(Employee employee, Schedule schedule) {
+        List<Schedule> schedules = employee.getSchedules();
+
+        if (schedules == null) {
+            schedules = new ArrayList<>();
+        }
+
+        schedules.add(schedule);
+        employee.setSchedules(schedules);
+        employeeRepository.save(employee);
     }
 
 }
