@@ -2,11 +2,14 @@ package com.udacity.jdnd.course3.critter.schedule;
 
 import com.udacity.jdnd.course3.critter.pet.Pet;
 import com.udacity.jdnd.course3.critter.pet.PetService;
+import com.udacity.jdnd.course3.critter.user.Customer;
+import com.udacity.jdnd.course3.critter.user.CustomerService;
 import com.udacity.jdnd.course3.critter.user.Employee;
 import com.udacity.jdnd.course3.critter.user.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,13 +23,16 @@ public class ScheduleController {
     private ScheduleService scheduleService;
     private PetService petService;
     private EmployeeService employeeService;
+    private CustomerService customerService;
 
     public ScheduleController(ScheduleService scheduleService,
                               PetService petService,
-                              EmployeeService employeeService) {
+                              EmployeeService employeeService,
+                              CustomerService customerService) {
         this.scheduleService = scheduleService;
         this.petService = petService;
         this.employeeService = employeeService;
+        this.customerService = customerService;
     }
 
     @PostMapping
@@ -55,7 +61,13 @@ public class ScheduleController {
 
     @GetMapping("/customer/{customerId}")
     public List<ScheduleDTO> getScheduleForCustomer(@PathVariable long customerId) {
-        throw new UnsupportedOperationException();
+        Customer customer = customerService.getCustomerById(customerId);
+        List<Pet> pets = customer.getPets();
+        List<Schedule> schedules = pets.stream()
+                .map(Pet::getSchedules)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        return convertScheduleListToScheduleDTOList(schedules);
     }
 
     private List<ScheduleDTO> convertScheduleListToScheduleDTOList(List<Schedule> schedules) {
